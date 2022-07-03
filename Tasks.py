@@ -3,8 +3,9 @@ import os
 
 import numpy as np
 from keras.datasets import mnist
+from types import SimpleNamespace
 
-from .Models import SimpleModel
+from Models import SimpleModel
 
 
 def get_accuracy(preds, real):
@@ -18,9 +19,9 @@ def train(jobConfig, taskConfig):
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
     model.train(X_train_real, y_train_real)
     logging.info("Finished Training")
-    path=os.path.join(jobConfig['outputDir'], 'postTrain.ckpt')
+    path = os.path.join(jobConfig.outputDir, 'postTrain.ckpt')
     model.save(path)
-    logging.info("Saved model to "+ path)
+    logging.info("Saved model to " + path)
 
 
 def test(jobConfig, taskConfig):
@@ -28,12 +29,11 @@ def test(jobConfig, taskConfig):
 
     logging.info("Doing test")
     model = SimpleModel()
-    path=os.path.join(jobConfig['outputDir'], 'postTrain.ckpt')
-    logging.info("Loading model from "+ path)
+    path = os.path.join(jobConfig.outputDir, 'postTrain.ckpt')
+    logging.info("Loading model from " + path)
     model.load(path)
-    acc = get_accuracy(model.getTestOutput(X_test_real),y_test_real)
-    logging.info("Resulting accuracy = "+str(acc))
-
+    acc = get_accuracy(model.getTestOutput(X_test_real), y_test_real)
+    logging.info("Resulting accuracy = " + str(acc))
 
 
 if __name__ == "__main__":
@@ -45,6 +45,7 @@ if __name__ == "__main__":
     consoleHandler.setLevel(logging.INFO)
     consoleHandler.setFormatter(logFormatter)
     rootLogger.addHandler(consoleHandler)
-
-    # train({'outputDir': r'C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo\Tmp'}, {})
-    test({'outputDir': r'C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo\Tmp'}, {})
+    fakeConfigDict = {'outputDir': r'C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo\Tmp'}
+    fakeConfig = SimpleNamespace(**fakeConfigDict)
+    # train(fakeConfig, {})
+    test(fakeConfig, {})
