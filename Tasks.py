@@ -4,7 +4,7 @@ import os
 import numpy as np
 from keras.datasets import mnist
 
-from Models import SimpleModel
+from .Models import SimpleModel
 
 
 def get_accuracy(preds, real):
