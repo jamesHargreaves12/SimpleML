@@ -19,7 +19,7 @@ def train(jobConfig, taskConfig):
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
     model.train(X_train_real, y_train_real)
     logging.info("Finished Training")
-    path = os.path.join(jobConfig.outputDir, 'postTrain.ckpt')
+    path = os.path.join(jobConfig.outputDir, 'model/postTrain.ckpt')
     model.save(path)
     logging.info("Saved model to " + path)
 
@@ -29,7 +29,7 @@ def test(jobConfig, taskConfig):
 
     logging.info("Doing test")
     model = SimpleModel()
-    path = os.path.join(jobConfig.outputDir, 'postTrain.ckpt')
+    path = os.path.join(jobConfig.outputDir, 'model/postTrain.ckpt')
     logging.info("Loading model from " + path)
     model.load(path)
     acc = get_accuracy(model.getTestOutput(X_test_real), y_test_real)
@@ -47,5 +47,5 @@ if __name__ == "__main__":
     rootLogger.addHandler(consoleHandler)
     fakeConfigDict = {'outputDir': r'C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo\Tmp'}
     fakeConfig = SimpleNamespace(**fakeConfigDict)
-    # train(fakeConfig, {})
+    train(fakeConfig, {})
     test(fakeConfig, {})

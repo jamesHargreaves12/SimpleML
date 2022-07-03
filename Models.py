@@ -14,13 +14,6 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D, GlobalAveragePooling2D, Flatten
 from tensorflow.keras.layers import BatchNormalization
 
-# The MNIST data is split between 60,000 28 x 28 pixel training images and 10,000 28 x 28 pixel images
-(X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
-
-print("X_train shape", X_train_real.shape)
-print("y_train shape", y_train_real.shape)
-print("X_test shape", X_test_real.shape)
-print("y_test shape", y_test_real.shape)
 
 
 class MnistBase(metaclass=ABCMeta):
@@ -163,6 +156,14 @@ def get_accuracy(preds, real):
 
 
 if __name__ == "__maim__":
+    # The MNIST data is split between 60,000 28 x 28 pixel training images and 10,000 28 x 28 pixel images
+    (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
+
+    print("X_train shape", X_train_real.shape)
+    print("y_train shape", y_train_real.shape)
+    print("X_test shape", X_test_real.shape)
+    print("y_test shape", y_test_real.shape)
+
     N = X_train_real.shape[0]
     for i in range(10):
         start_index = N * i // 10
