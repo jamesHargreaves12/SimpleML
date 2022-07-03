@@ -2,6 +2,7 @@ import logging
 import os
 
 import numpy as np
+import yaml
 from keras.datasets import mnist
 from types import SimpleNamespace
 
@@ -34,6 +35,8 @@ def test(jobConfig, taskConfig):
     model.load(path)
     acc = get_accuracy(model.getTestOutput(X_test_real), y_test_real)
     logging.info("Resulting accuracy = " + str(acc))
+    with open(os.path.join(jobConfig.outputDir, 'results.yaml'), 'w+') as fp:
+        yaml.dump({'accuracy': acc}, fp)
 
 
 if __name__ == "__main__":
