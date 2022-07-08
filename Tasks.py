@@ -34,12 +34,12 @@ def test(jobConfig, taskConfig):
 
     logging.info("Doing test")
     model = SimpleModel()
-    path = os.path.join(jobConfig.outputDir, 'model/postTrain.ckpt')
+    path = os.path.join(jobConfig['outputDir'], 'model/postTrain.ckpt')
     logging.info("Loading model from " + path)
     model.load(path)
     acc = get_accuracy(model.getTestOutput(X_test_real), y_test_real)
     logging.info("Resulting accuracy = " + str(acc))
-    with open(os.path.join(jobConfig.outputDir, 'results.yaml'), 'w+') as fp:
+    with open(os.path.join(jobConfig['outputDir'], 'results.yaml'), 'w+') as fp:
         yaml.dump(
             {
                 'accuracy': acc,
