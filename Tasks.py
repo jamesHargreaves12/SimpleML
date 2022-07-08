@@ -22,7 +22,7 @@ def train(jobConfig, taskConfig):
 
     model = SimpleModel()
 
-    model.train(X_train, y_train)
+    model.train(X_train, y_train, X_train.shape[0])
     logging.info("Finished Training")
     path = os.path.join(jobConfig['outputDir'], 'model/postTrain.ckpt')
     model.save(path)

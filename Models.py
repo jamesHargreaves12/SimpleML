@@ -177,5 +177,5 @@ if __name__ == "__maim__":
 
         simpleModel = ConvModel()
         simpleModel.train(X_train_real, y_train_real, N)
-        acc = get_accuracy(simpleModel.getTestOutput(X_test_real), y_test_real);
+        acc = get_accuracy(simpleModel.getTestOutput(X_test_real), y_test_real)
         print(i, acc)
