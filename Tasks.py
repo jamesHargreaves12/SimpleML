@@ -62,11 +62,13 @@ partitionNumber: {partitionNumber}
 totalNumberPartitions: {totalNumberPartitions}
 tasks:
   - id: Train
-    method: train   
+    method: train
   - id: Test
     method: test
 '''.format(
-                        outputDir=os.path.join(taskConfig['baseOutputDir'], time.strftime('%Y_%m_%d_%H_%M_%S')),
+                        outputDir=os.path.join(taskConfig['baseOutputDir'],
+                                               time.strftime('%Y_%m_%d'),
+                                               '{}_{}'.format(i, taskConfig['totalNumberPartitions'])),
                         partitionNumber=i,
                         totalNumberPartitions=taskConfig['totalNumberPartitions']))
 
