@@ -1,6 +1,6 @@
 def train(jobConfig, taskConfig):
-    requiredJobConfigFields = []
-    requiredTaskConfigFields = ['partitionNumber', 'totalNumberPartitions']
+    requiredJobConfigFields = ['partitionNumber', 'totalNumberPartitions']
+    requiredTaskConfigFields = []
     errors = []
     for field in requiredJobConfigFields:
         if field not in jobConfig:
