@@ -53,14 +53,14 @@ def createPartitionConfigs(jobConfig, taskConfig):
     for i in range(taskConfig['totalNumberPartitions']):
         configFileName = 'config_{}_{}.yaml'.format(i,taskConfig['totalNumberPartitions'])
         with open(os.path.join(taskConfig['baseConfigDir'], configFileName), 'w+') as fp:
-            yaml.dump(
-                {
+            fp.write(
+
                     r'''
     outputDir: {outputDir}
     githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
     tasks:
       - id: Train
-        method: train
+        method: train   
         partitionNumber: {partitionNumber}
         totalNumberPartitions: {totalNumberPartitions}
       - id: Test
@@ -68,8 +68,7 @@ def createPartitionConfigs(jobConfig, taskConfig):
 '''.format(
                         outputDir=os.path.join(taskConfig['baseOutputDir'], time.strftime('%Y_%m_%d_%H_%M_%S')),
                         partitionNumber=i,
-                        totalNumberPartitions=taskConfig['totalNumberPartitions'])
-                }, fp)
+                        totalNumberPartitions=taskConfig['totalNumberPartitions']))
 
 
 
