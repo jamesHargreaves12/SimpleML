@@ -18,7 +18,7 @@ def get_accuracy(preds, real):
 def train(jobConfig, taskConfig):
     logging.info("Start Training")
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
-    (X_train, y_train) = getPartition(taskConfig['partitionNumber'], taskConfig['totalNumberPartitions'], X_train_real, y_train_real)
+    (X_train, y_train) = getPartition(jobConfig['partitionNumber'], jobConfig['totalNumberPartitions'], X_train_real, y_train_real)
 
     model = SimpleModel()
 
@@ -43,8 +43,8 @@ def test(jobConfig, taskConfig):
         yaml.dump(
             {
                 'accuracy': acc,
-                'partitionNumber': taskConfig['partitionNumber'],
-                'totalNumberPartitions': taskConfig['totalNumberPartitions']
+                'partitionNumber': jobConfig['partitionNumber'],
+                'totalNumberPartitions': jobConfig['totalNumberPartitions']
              }, fp)
 
 
@@ -58,11 +58,11 @@ def createPartitionConfigs(jobConfig, taskConfig):
                     r'''
 outputDir: {outputDir}
 githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
+partitionNumber: {partitionNumber}
+totalNumberPartitions: {totalNumberPartitions}
 tasks:
   - id: Train
     method: train   
-    partitionNumber: {partitionNumber}
-    totalNumberPartitions: {totalNumberPartitions}
   - id: Test
     method: test
 '''.format(
