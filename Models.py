@@ -22,7 +22,7 @@ class MnistBase(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def train(self, xs, ys):
+    def train(self, xs, ys, N):
         pass
 
     @abstractmethod
@@ -54,9 +54,9 @@ class SimpleModel(MnistBase):
     def summary(self):
         self.model.summary()
 
-    def train(self, xs, ys):
+    def train(self, xs, ys, N):
         # Prepare data to the expected form
-        X_train = xs.reshape(60000, 784)
+        X_train = xs.reshape(N, 784)
         X_train = X_train.astype('float32')
         X_train /= 255
 
@@ -128,8 +128,8 @@ class ConvModel(MnistBase):
     def summary(self):
         self.model.summary()
 
-    def train(self, xs, ys):
-        X_train = xs.reshape(60000, 28, 28, 1)  # add an additional dimension to represent the single-channel
+    def train(self, xs, ys, N):
+        X_train = xs.reshape(N, 28, 28, 1)  # add an additional dimension to represent the single-channel
         X_train = X_train.astype('float32')  # change integers to 32-bit floating point numbers
         X_train /= 255  # normalize each value for each pixel for the entire vector for each input
 
@@ -176,6 +176,6 @@ if __name__ == "__maim__":
         y_train = np.concatenate((y_before, y_after))
 
         simpleModel = ConvModel()
-        simpleModel.train(X_train_real, y_train_real)
+        simpleModel.train(X_train_real, y_train_real, N)
         acc = get_accuracy(simpleModel.getTestOutput(X_test_real), y_test_real);
         print(i, acc)
