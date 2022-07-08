@@ -56,15 +56,15 @@ def createPartitionConfigs(jobConfig, taskConfig):
             fp.write(
 
                     r'''
-    outputDir: {outputDir}
-    githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
-    tasks:
-      - id: Train
-        method: train   
-        partitionNumber: {partitionNumber}
-        totalNumberPartitions: {totalNumberPartitions}
-      - id: Test
-        method: test
+outputDir: {outputDir}
+githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
+tasks:
+  - id: Train
+    method: train   
+    partitionNumber: {partitionNumber}
+    totalNumberPartitions: {totalNumberPartitions}
+  - id: Test
+    method: test
 '''.format(
                         outputDir=os.path.join(taskConfig['baseOutputDir'], time.strftime('%Y_%m_%d_%H_%M_%S')),
                         partitionNumber=i,
