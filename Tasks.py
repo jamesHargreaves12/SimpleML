@@ -18,13 +18,13 @@ def get_accuracy(preds, real):
 def train(jobConfig, taskConfig):
     logging.info("Start Training")
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
-    (X_train, y_train) = getPartition(taskConfig.partitionNumber, taskConfig.totalNumberPartitions, X_train_real, y_train_real)
+    (X_train, y_train) = getPartition(taskConfig['partitionNumber'], taskConfig['totalNumberPartitions'], X_train_real, y_train_real)
 
     model = SimpleModel()
 
     model.train(X_train, y_train)
     logging.info("Finished Training")
-    path = os.path.join(jobConfig.outputDir, 'model/postTrain.ckpt')
+    path = os.path.join(jobConfig['outputDir'], 'model/postTrain.ckpt')
     model.save(path)
     logging.info("Saved model to " + path)
 
@@ -43,16 +43,16 @@ def test(jobConfig, taskConfig):
         yaml.dump(
             {
                 'accuracy': acc,
-                'partitionNumber': taskConfig.partitionNumber,
-                'totalNumberPartitions': taskConfig.totalNumberPartitions
+                'partitionNumber': taskConfig['partitionNumber'],
+                'totalNumberPartitions': taskConfig['totalNumberPartitions']
              }, fp)
 
 
 def createPartitionConfigs(jobConfig, taskConfig):
     time = datetime.now()
-    for i in range(taskConfig.totalNumberPartitions):
-        configFileName = 'config_{}_{}.yaml'.format(i,taskConfig.totalNumberPartitions)
-        with open(os.path.join(taskConfig.baseConfigDir, configFileName), 'w+') as fp:
+    for i in range(taskConfig['totalNumberPartitions']):
+        configFileName = 'config_{}_{}.yaml'.format(i,taskConfig['totalNumberPartitions'])
+        with open(os.path.join(taskConfig['baseConfigDir'], configFileName), 'w+') as fp:
             yaml.dump(
                 {
                     r'''
@@ -66,9 +66,9 @@ def createPartitionConfigs(jobConfig, taskConfig):
       - id: Test
         method: test
 '''.format(
-                        outputDir=os.path.join(taskConfig.baseOutputDir, time.strftime('%Y_%m_%d_%H_%M_%S')),
+                        outputDir=os.path.join(taskConfig['baseOutputDir'], time.strftime('%Y_%m_%d_%H_%M_%S')),
                         partitionNumber=i,
-                        totalNumberPartitions=taskConfig.totalNumberPartitions)
+                        totalNumberPartitions=taskConfig['totalNumberPartitions'])
                 }, fp)
 
 
