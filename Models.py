@@ -147,7 +147,7 @@ class ConvModel(MnistBase):
                                  height_shift_range=0.08, zoom_range=0.08)
 
         train_generator = gen.flow(X_train, Y_train, batch_size=128)
-        self.model.fit_generator(train_generator, steps_per_epoch=60000 // 128, epochs=5, verbose=1)
+        self.model.fit_generator(train_generator, steps_per_epoch=N // 128, epochs=5, verbose=1)
 
     def getTestOutput(self, xs):
         X_test = xs.reshape(10000, 28, 28, 1)

@@ -1,5 +1,5 @@
 def train(jobConfig, taskConfig):
-    requiredJobConfigFields = ['partitionNumber', 'totalNumberPartitions','modelType']
+    requiredJobConfigFields = ['partitionNumber', 'totalNumberPartitions','modelType','repeatNumber']
     requiredTaskConfigFields = []
     errors = []
     for field in requiredJobConfigFields:

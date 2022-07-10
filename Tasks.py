@@ -1,6 +1,5 @@
 import logging
 import os
-from datetime import datetime
 
 import numpy as np
 import yaml
@@ -51,16 +50,19 @@ def test(jobConfig, taskConfig):
             {
                 'accuracy': acc,
                 'partitionNumber': jobConfig['partitionNumber'],
-                'totalNumberPartitions': jobConfig['totalNumberPartitions']
+                'totalNumberPartitions': jobConfig['totalNumberPartitions'],
+                'modelType': jobConfig['modelType'],
+                'repeatNumber': jobConfig['repeatNumber']
             }, fp)
 
 
-def getConfigObject(outputDir, partitionNumber, totalNumberPartitions, modelType):
+def getConfigObject(outputDir, partitionNumber, totalNumberPartitions, modelType, repeatNumber):
     return {
         "outputDir": outputDir,
         "githubRepository": "https://github.com/jamesHargreaves12/SimpleML.git",
         "partitionNumber": partitionNumber,
         "totalNumberPartitions": totalNumberPartitions,
+        'repeatNumber': repeatNumber,
         "modelType": modelType,
         "tasks": [
             {
@@ -84,7 +86,8 @@ def createConfigs(jobConfig, taskConfig):
             outputDir=os.path.join(taskConfig['baseOutputDir'], id),
             partitionNumber=i,
             totalNumberPartitions=taskConfig['totalNumberPartitions'],
-            modelType=taskConfig['modelType']
+            modelType=taskConfig['modelType'],
+            repeatNumber=taskConfig['repeatNumber']
         )
     return configs
 
