@@ -1,5 +1,5 @@
 def train(jobConfig, taskConfig):
-    requiredJobConfigFields = ['partitionNumber', 'totalNumberPartitions']
+    requiredJobConfigFields = ['partitionNumber', 'totalNumberPartitions','modelType']
     requiredTaskConfigFields = []
     errors = []
     for field in requiredJobConfigFields:
@@ -13,7 +13,7 @@ def train(jobConfig, taskConfig):
 
 def createConfigs(jobConfig, taskConfig):
     errors = []
-    requiredTaskConfigFields = ['totalNumberPartitions','baseOutputDir','repeatNumber']
+    requiredTaskConfigFields = ['totalNumberPartitions','baseOutputDir','repeatNumber','modelType']
     for field in requiredTaskConfigFields:
         if field not in taskConfig:
             errors.append("The field {} is required but not provided.".format(field))

@@ -64,7 +64,7 @@ class SimpleModel(MnistBase):
 
         self.model.fit(X_train, Y_train,
                        batch_size=128, epochs=5,
-                       verbose=0)
+                       verbose=1)
 
     def save(self, filepath):
         self.model.save_weights(filepath)
@@ -139,7 +139,7 @@ class ConvModel(MnistBase):
                                  height_shift_range=0.08, zoom_range=0.08)
 
         train_generator = gen.flow(X_train, Y_train, batch_size=128)
-        self.model.fit_generator(train_generator, steps_per_epoch=60000 // 128, epochs=5, verbose=0)
+        self.model.fit_generator(train_generator, steps_per_epoch=60000 // 128, epochs=5, verbose=1)
 
     def getTestOutput(self, xs):
         X_test = xs.reshape(10000, 28, 28, 1)
@@ -155,7 +155,7 @@ def get_accuracy(preds, real):
     return np.count_nonzero(preds == real) / real.shape[0]
 
 
-if __name__ == "__maim__":
+if __name__ == "__main__":
     # The MNIST data is split between 60,000 28 x 28 pixel training images and 10,000 28 x 28 pixel images
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
 
@@ -165,17 +165,8 @@ if __name__ == "__maim__":
     print("y_test shape", y_test_real.shape)
 
     N = X_train_real.shape[0]
-    for i in range(10):
-        start_index = N * i // 10
-        end_index = N * (i + 1) // 10
-        X_before = X_train_real[:start_index] if start_index > 0 else np.empty((0, 28, 28))
-        X_after = X_train_real[end_index:] if end_index < N else np.empty((0, 28, 28))
-        y_before = y_train_real[:start_index] if start_index > 0 else np.empty((0))
-        y_after = y_train_real[end_index:] if end_index < N else np.empty((0))
-        X_train = np.concatenate((X_before, X_after))
-        y_train = np.concatenate((y_before, y_after))
 
-        simpleModel = ConvModel()
-        simpleModel.train(X_train_real, y_train_real, N)
-        acc = get_accuracy(simpleModel.getTestOutput(X_test_real), y_test_real)
-        print(i, acc)
+    model = ConvModel()
+    model.train(X_train_real, y_train_real, N)
+    acc = get_accuracy(model.getTestOutput(X_test_real), y_test_real)
+    print(acc)
