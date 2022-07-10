@@ -29,6 +29,14 @@ class MnistBase(metaclass=ABCMeta):
     def getTestOutput(self, xs):
         pass
 
+    @abstractmethod
+    def save(self, filepath):
+        pass
+
+    @abstractmethod
+    def load(self, filepath):
+        pass
+
 
 class SimpleModel(MnistBase):
     def __init__(self):
@@ -150,6 +158,11 @@ class ConvModel(MnistBase):
         predicted_classes = np.argmax(predicted, axis=1)
         return predicted_classes
 
+    def save(self, filepath):
+        self.model.save_weights(filepath)
+
+    def load(self, filepath):
+        self.model.load_weights(filepath)
 
 def get_accuracy(preds, real):
     return np.count_nonzero(preds == real) / real.shape[0]
