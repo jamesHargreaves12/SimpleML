@@ -45,33 +45,38 @@ def test(jobConfig, taskConfig):
                 'accuracy': acc,
                 'partitionNumber': jobConfig['partitionNumber'],
                 'totalNumberPartitions': jobConfig['totalNumberPartitions']
-             }, fp)
+            }, fp)
 
 
-def createPartitionConfigs(jobConfig, taskConfig):
-    time = datetime.now()
+def getConfigObject(outputDir, partitionNumber, totalNumberPartitions):
+    return {
+        "outputDir": outputDir,
+        "githubRepository": "https://github.com/jamesHargreaves12/SimpleML.git",
+        "partitionNumber": partitionNumber,
+        "totalNumberPartitions": totalNumberPartitions,
+        "tasks": [
+            {
+                "id": "Train",
+                "method": "train"
+            },
+            {
+                "id": "Test",
+                "method": "test"
+            }
+        ]
+    }
+
+
+def createConfigs(jobConfig, taskConfig):
+    configs = {}
     for i in range(taskConfig['totalNumberPartitions']):
-        configFileName = 'config_{}_{}.yaml'.format(i,taskConfig['totalNumberPartitions'])
-        with open(os.path.join(taskConfig['baseConfigDir'], configFileName), 'w+') as fp:
-            fp.write(
-
-                    r'''
-outputDir: {outputDir}
-githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
-partitionNumber: {partitionNumber}
-totalNumberPartitions: {totalNumberPartitions}
-tasks:
-  - id: Train
-    method: train
-  - id: Test
-    method: test
-'''.format(
-                        outputDir=os.path.join(taskConfig['baseOutputDir'],
-                                               time.strftime('%Y_%m_%d'),
-                                               '{}_{}'.format(i, taskConfig['totalNumberPartitions'])),
-                        partitionNumber=i,
-                        totalNumberPartitions=taskConfig['totalNumberPartitions']))
-
+        configFileName = 'config_{}_{}.yaml'.format(i, taskConfig['totalNumberPartitions'])
+        configs[configFileName] = getConfigObject(
+                outputDir=os.path.join(taskConfig['baseOutputDir'],
+                                       '{}_{}'.format(i, taskConfig['totalNumberPartitions'])),
+                partitionNumber=i,
+                totalNumberPartitions=taskConfig['totalNumberPartitions'])
+    return configs
 
 
 if __name__ == "__main__":
