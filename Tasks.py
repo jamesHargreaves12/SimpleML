@@ -84,7 +84,7 @@ def createConfigs(jobConfig, taskConfig):
             outputDir=os.path.join(taskConfig['baseOutputDir'], id),
             partitionNumber=i,
             totalNumberPartitions=taskConfig['totalNumberPartitions'],
-            modelType=taskConfig['ModelType']
+            modelType=taskConfig['modelType']
         )
     return configs
 
