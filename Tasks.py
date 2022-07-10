@@ -18,7 +18,8 @@ def get_accuracy(preds, real):
 def train(jobConfig, taskConfig):
     logging.info("Start Training")
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
-    (X_train, y_train) = getPartition(jobConfig['partitionNumber'], jobConfig['totalNumberPartitions'], X_train_real, y_train_real)
+    (X_train, y_train) = getPartition(jobConfig['partitionNumber'], jobConfig['totalNumberPartitions'], X_train_real,
+                                      y_train_real)
 
     model = SimpleModel()
 
@@ -70,12 +71,14 @@ def getConfigObject(outputDir, partitionNumber, totalNumberPartitions):
 def createConfigs(jobConfig, taskConfig):
     configs = {}
     for i in range(taskConfig['totalNumberPartitions']):
-        configFileName = 'config_{}_{}.yaml'.format(i, taskConfig['totalNumberPartitions'])
+        configFileName = 'config_{}_{}_{}.yaml'.format(i, taskConfig['totalNumberPartitions'],
+                                                       taskConfig['repeatNumber'])
         configs[configFileName] = getConfigObject(
-                outputDir=os.path.join(taskConfig['baseOutputDir'],
-                                       '{}_{}'.format(i, taskConfig['totalNumberPartitions'])),
-                partitionNumber=i,
-                totalNumberPartitions=taskConfig['totalNumberPartitions'])
+            outputDir=os.path.join(taskConfig['baseOutputDir'],
+                                   '{}_{}_{}'.format(i, taskConfig['totalNumberPartitions'],
+                                                     taskConfig['repeatNumber'])),
+            partitionNumber=i,
+            totalNumberPartitions=taskConfig['totalNumberPartitions'])
     return configs
 
 
