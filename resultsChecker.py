@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.stats import norm
+import numpy as np
 
 from job_orchestration.Config import Config
 from job_orchestration.GetResults import getResults
@@ -16,7 +18,7 @@ def StatusFilter(status: StatusTracker):
 def ConfigFilter(config: Config):
     return 'totalNumberPartitions' in config.raw_config \
            and config.raw_config['totalNumberPartitions'] == 10 \
-           and config.raw_config['totalTrainingSize'] == 10000 \
+           and config.raw_config['totalTrainingSize'] == 1000 \
            and config.raw_config['modelType'] == 'Simple'
 
 
