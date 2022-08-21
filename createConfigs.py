@@ -21,8 +21,10 @@ def getConfigObject(outputDir, partitionNumber, config: dict, totalNumberPartiti
         ]
     }
     for k in config.keys():
-        retVal[k] = config[k]
+        if k not in retVal:
+            retVal[k] = config[k]
     return retVal
+
 
 def main():
     base_config = yaml.safe_load(open("./baseConfig.yaml"))
@@ -42,6 +44,7 @@ def main():
                 totalNumberPartitions=totalNumberPartitions
             )
     saveConfigs(configs)
+
 
 if __name__ == "__main__":
     main()
