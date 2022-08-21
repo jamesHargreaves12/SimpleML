@@ -56,10 +56,11 @@ def test(jobConfig, taskConfig):
             }, fp)
 
 
-def getConfigObject(outputDir, partitionNumber, totalNumberPartitions, modelType, repeatNumber,totalTrainingSize):
+def getConfigObject(outputDir, pathToModuleCode, partitionNumber, totalNumberPartitions, modelType, repeatNumber,totalTrainingSize):
     return {
         "outputDir": outputDir,
         "githubRepository": "https://github.com/jamesHargreaves12/SimpleML.git",
+        "pathToModuleCode": pathToModuleCode,
         "partitionNumber": partitionNumber,
         "totalNumberPartitions": totalNumberPartitions,
         'repeatNumber': repeatNumber,
@@ -86,6 +87,7 @@ def createConfigs(jobConfig, taskConfig):
         configs[configFileName] = getConfigObject(
             outputDir=os.path.join(taskConfig['baseOutputDir'], id),
             partitionNumber=i,
+            pathToModuleCode=taskConfig['pathToModuleCode'],
             totalNumberPartitions=taskConfig['totalNumberPartitions'],
             modelType=taskConfig['modelType'],
             repeatNumber=taskConfig['repeatNumber'],
