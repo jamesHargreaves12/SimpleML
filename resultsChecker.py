@@ -16,6 +16,7 @@ def StatusFilter(status: StatusTracker):
 def ConfigFilter(config: Config):
     return 'totalNumberPartitions' in config.raw_config \
            and config.raw_config['totalNumberPartitions'] == 10 \
+           and config.raw_config['totalTrainingSize'] == 10000 \
            and config.raw_config['modelType'] == 'Simple'
 
 
