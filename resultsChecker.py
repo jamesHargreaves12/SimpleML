@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import pandas as pd
 
 from job_orchestration.Config import Config
 from job_orchestration.GetResults import getResults
@@ -10,7 +11,8 @@ def StatusFilter(status: StatusTracker):
 
 
 def ConfigFilter(config: Config):
-    return 'totalNumberPartitions' in config.raw_config and config.raw_config['totalNumberPartitions'] == 2
+    return 'totalNumberPartitions' in config.raw_config and config.raw_config['totalNumberPartitions'] == 10
 
 
-print(getResults(configFilter=ConfigFilter, statusFilter=StatusFilter))
+results = getResults(configFilter=ConfigFilter, statusFilter=StatusFilter)
+
