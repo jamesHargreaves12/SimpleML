@@ -1,4 +1,4 @@
-import tqdm as tqdm
+from tqdm import tqdm
 import yaml
 from job_orchestration.clientUtils import saveConfigs
 
