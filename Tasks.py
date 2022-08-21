@@ -36,7 +36,7 @@ def train(taskConfig: TaskConfig):
            totalNumberPartitions=taskConfig['totalNumberPartitions'],
            totalTrainingSize=taskConfig['totalTrainingSize'],
            batchSize= taskConfig["batchSize"],
-           epochs=taskConfig["epoch"])
+           epochs=taskConfig["epochs"])
     path = os.path.join(taskConfig['outputDir'], modelSaveLocation)
     model.save(path)
     logging.info("Saved model to " + path)
@@ -64,11 +64,11 @@ def test(config: TaskConfig):
     logging.info("End test")
 
 
-def getConfigObject(outputDir, repeatNumber, config:TaskConfig):
-    copyValues=["pathToModuleCode","partitionNumber","totalNumberPartitions","githubRepository","modelType","batchSize","epoch","totalTrainingSize"]
+def getConfigObject(outputDir, partitionNumber, config:TaskConfig):
+    copyValues=["pathToModuleCode","repeatNumber","totalNumberPartitions","githubRepository","modelType","batchSize","epochs","totalTrainingSize"]
     retVal = {
         "outputDir": outputDir,
-        'repeatNumber': repeatNumber,
+        "PartitionNumber": partitionNumber,
         "tasks": [
             {
                 "id": "Train",
@@ -93,7 +93,7 @@ def createConfigs(config: TaskConfig):
         configFileName = 'config_{}.yaml'.format(id)
         configs[configFileName] = getConfigObject(
             outputDir=os.path.join(config['baseOutputDir'], id),
-            repeatNumber=config['repeatNumber'],
+            partitionNumber=i,
             config=config
         )
     return configs
