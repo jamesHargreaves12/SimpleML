@@ -2,18 +2,18 @@ from job_orchestration.Config import TaskConfig
 
 
 def train(taskConfig:TaskConfig):
-    requiredFields = ['partitionNumber', 'totalNumberPartitions','modelType','repeatNumber']
+    requiredFields = ['partitionNumber', 'totalNumberPartitions','modelType','repeatNumber','outputDir',
+                      'totalTrainingSize','batchSize', 'epochs']
     errors = []
     for field in requiredFields:
         if field not in taskConfig:
             errors.append("The field {} is required but not provided.".format(field))
     return errors
 
-
-def createConfigs(taskConfig:TaskConfig):
+def test(taskConfig:TaskConfig):
+    requiredFields = ['partitionNumber', 'totalNumberPartitions','modelType','repeatNumber','outputDir']
     errors = []
-    requiredTaskConfigFields = ['totalNumberPartitions','baseOutputDir','repeatNumber','modelType']
-    for field in requiredTaskConfigFields:
+    for field in requiredFields:
         if field not in taskConfig:
             errors.append("The field {} is required but not provided.".format(field))
     return errors
