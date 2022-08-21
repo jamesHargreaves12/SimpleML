@@ -87,7 +87,7 @@ def createConfigs(jobConfig, taskConfig):
         configs[configFileName] = getConfigObject(
             outputDir=os.path.join(taskConfig['baseOutputDir'], id),
             partitionNumber=i,
-            pathToModuleCode=taskConfig['pathToModuleCode'],
+            pathToModuleCode=jobConfig['pathToModuleCode'],
             totalNumberPartitions=taskConfig['totalNumberPartitions'],
             modelType=taskConfig['modelType'],
             repeatNumber=taskConfig['repeatNumber'],
