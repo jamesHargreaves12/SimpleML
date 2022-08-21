@@ -21,6 +21,8 @@ def _train(model: MnistBase, partitionNumber, totalNumberPartitions, totalTraini
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
     (X_train, y_train) = getPartition(partitionNumber, totalNumberPartitions, X_train_real[:totalTrainingSize], y_train_real[:totalTrainingSize])
 
+    logging.info("Shape of training Data "+str(X_train.shape))
+
     model.train(X_train, y_train, X_train.shape[0])
     logging.info("Finished Training")
 
@@ -44,6 +46,7 @@ def test(jobConfig, taskConfig):
     path = os.path.join(jobConfig['outputDir'], modelSaveLocation)
     logging.info("Loading model from " + path)
     model.load(path)
+    logging.info("Fished loading model")
     acc = get_accuracy(model.getTestOutput(X_test_real), y_test_real)
     logging.info("Resulting accuracy = " + str(acc))
     with open(os.path.join(jobConfig['outputDir'], 'results.yaml'), 'w+') as fp:
@@ -54,6 +57,7 @@ def test(jobConfig, taskConfig):
                 'modelType': jobConfig['modelType'],
                 'repeatNumber': jobConfig['repeatNumber']
             }, fp)
+    logging.info("End test")
 
 
 def getConfigObject(outputDir, pathToModuleCode, partitionNumber, totalNumberPartitions, modelType, repeatNumber,totalTrainingSize):
