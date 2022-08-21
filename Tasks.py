@@ -16,10 +16,10 @@ def get_accuracy(preds, real):
     return np.count_nonzero(preds == real) / real.shape[0]
 
 
-def _train(model: MnistBase, partitionNumber, totalNumberPartitions):
+def _train(model: MnistBase, partitionNumber, totalNumberPartitions, totalTrainingSize):
     logging.info("Start Training")
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
-    (X_train, y_train) = getPartition(partitionNumber, totalNumberPartitions, X_train_real, y_train_real)
+    (X_train, y_train) = getPartition(partitionNumber, totalNumberPartitions, X_train_real[:totalTrainingSize], y_train_real[:totalTrainingSize])
 
     model.train(X_train, y_train, X_train.shape[0])
     logging.info("Finished Training")
@@ -29,7 +29,8 @@ def train(jobConfig, taskConfig):
     model = SimpleModel() if "modelType" not in jobConfig or jobConfig["modelType"] != "Conv" else ConvModel()
     _train(model,
            partitionNumber=jobConfig['partitionNumber'],
-           totalNumberPartitions=jobConfig['totalNumberPartitions'])
+           totalNumberPartitions=jobConfig['totalNumberPartitions'],
+           totalTrainingSize=jobConfig['totalTrainingSize'])
     path = os.path.join(jobConfig['outputDir'], modelSaveLocation)
     model.save(path)
     logging.info("Saved model to " + path)
@@ -50,13 +51,12 @@ def test(jobConfig, taskConfig):
             {
                 'accuracy': acc,
                 'partitionNumber': jobConfig['partitionNumber'],
-                'totalNumberPartitions': jobConfig['totalNumberPartitions'],
                 'modelType': jobConfig['modelType'],
                 'repeatNumber': jobConfig['repeatNumber']
             }, fp)
 
 
-def getConfigObject(outputDir, partitionNumber, totalNumberPartitions, modelType, repeatNumber):
+def getConfigObject(outputDir, partitionNumber, totalNumberPartitions, modelType, repeatNumber,totalTrainingSize):
     return {
         "outputDir": outputDir,
         "githubRepository": "https://github.com/jamesHargreaves12/SimpleML.git",
@@ -64,6 +64,7 @@ def getConfigObject(outputDir, partitionNumber, totalNumberPartitions, modelType
         "totalNumberPartitions": totalNumberPartitions,
         'repeatNumber': repeatNumber,
         "modelType": modelType,
+        "totalTrainingSize":totalTrainingSize,
         "tasks": [
             {
                 "id": "Train",
@@ -80,14 +81,15 @@ def getConfigObject(outputDir, partitionNumber, totalNumberPartitions, modelType
 def createConfigs(jobConfig, taskConfig):
     configs = {}
     for i in range(taskConfig['totalNumberPartitions']):
-        id = "{}_{}_{}_{}".format(taskConfig['modelType'], taskConfig['totalNumberPartitions'], i, taskConfig['repeatNumber'])
+        id = "{}_{}_{}_{}_{}".format(taskConfig['modelType'], taskConfig['totalNumberPartitions'], taskConfig['totalTrainingSize'], i, taskConfig['repeatNumber'])
         configFileName = 'config_{}.yaml'.format(id)
         configs[configFileName] = getConfigObject(
             outputDir=os.path.join(taskConfig['baseOutputDir'], id),
             partitionNumber=i,
             totalNumberPartitions=taskConfig['totalNumberPartitions'],
             modelType=taskConfig['modelType'],
-            repeatNumber=taskConfig['repeatNumber']
+            repeatNumber=taskConfig['repeatNumber'],
+            totalTrainingSize=taskConfig['totalTrainingSize']
         )
     return configs
 
