@@ -1,0 +1,7 @@
+batchSize: 128
+epochs: 5
+githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
+modelType: Simple
+outputDir: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo\JobOrchestrationWorkspace\Output\setup
+pathToModuleCode: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo
+totalTrainingSize: 1000

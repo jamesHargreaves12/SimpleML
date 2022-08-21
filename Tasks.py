@@ -64,41 +64,6 @@ def test(config: TaskConfig):
     logging.info("End test")
 
 
-def getConfigObject(outputDir, partitionNumber, config:TaskConfig):
-    copyValues=["pathToModuleCode","repeatNumber","totalNumberPartitions","githubRepository","modelType","batchSize","epochs","totalTrainingSize"]
-    retVal = {
-        "outputDir": outputDir,
-        "partitionNumber": partitionNumber,
-        "tasks": [
-            {
-                "id": "Train",
-                "method": "train"
-            },
-            {
-                "id": "Test",
-                "method": "test"
-            }
-        ]
-    }
-    for k in copyValues:
-        retVal[k]=config[k]
-    return retVal
-
-
-def createConfigs(config: TaskConfig):
-    configs = {}
-    for i in range(config['totalNumberPartitions']):
-        id = "{}_{}_{}_{}_{}".format(config['modelType'], config['totalNumberPartitions'], config['totalTrainingSize'],
-                                     i, config['repeatNumber'])
-        configFileName = 'config_{}.yaml'.format(id)
-        configs[configFileName] = getConfigObject(
-            outputDir=os.path.join(config['baseOutputDir'], id),
-            partitionNumber=i,
-            config=config
-        )
-    return configs
-
-
 if __name__ == "__main__":
     logFormatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s]  %(message)s")
     rootLogger = logging.getLogger()
