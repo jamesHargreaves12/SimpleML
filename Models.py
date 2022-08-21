@@ -21,7 +21,7 @@ class MnistBase(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def train(self, xs, ys, N):
+    def train(self, xs, ys, N, batchSize, epochs):
         pass
 
     @abstractmethod
@@ -61,7 +61,7 @@ class SimpleModel(MnistBase):
     def summary(self):
         self.model.summary()
 
-    def train(self, xs, ys, N):
+    def train(self, xs, ys, N, batchSize, epochs):
         # Prepare data to the expected form
         X_train = xs.reshape(N, 784)
         X_train = X_train.astype('float32')
@@ -70,7 +70,7 @@ class SimpleModel(MnistBase):
         Y_train = np_utils.to_categorical(ys, 10)
 
         self.model.fit(X_train, Y_train,
-                       batch_size=128, epochs=5,
+                       batch_size=batchSize, epochs=epochs,
                        verbose=1)
 
     def save(self, filepath):
@@ -135,7 +135,7 @@ class ConvModel(MnistBase):
     def summary(self):
         self.model.summary()
 
-    def train(self, xs, ys, N):
+    def train(self, xs, ys, N, batchSize, epochs):
         X_train = xs.reshape(N, 28, 28, 1)  # add an additional dimension to represent the single-channel
         X_train = X_train.astype('float32')  # change integers to 32-bit floating point numbers
         X_train /= 255  # normalize each value for each pixel for the entire vector for each input
@@ -145,8 +145,8 @@ class ConvModel(MnistBase):
         gen = ImageDataGenerator(rotation_range=8, width_shift_range=0.08, shear_range=0.3,
                                  height_shift_range=0.08, zoom_range=0.08)
 
-        train_generator = gen.flow(X_train, Y_train, batch_size=128)
-        self.model.fit_generator(train_generator, steps_per_epoch=N // 128, epochs=5, verbose=1)
+        train_generator = gen.flow(X_train, Y_train, batch_size=batchSize)
+        self.model.fit_generator(train_generator, steps_per_epoch=N // batchSize, epochs=epochs, verbose=1)
 
     def getTestOutput(self, xs):
         X_test = xs.reshape(10000, 28, 28, 1)

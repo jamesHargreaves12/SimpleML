@@ -17,7 +17,7 @@ def get_accuracy(preds, real):
     return np.count_nonzero(preds == real) / real.shape[0]
 
 
-def _train(model: MnistBase, partitionNumber, totalNumberPartitions, totalTrainingSize):
+def _train(model: MnistBase, partitionNumber, totalNumberPartitions, totalTrainingSize,batchSize, epochs):
     logging.info("Start Training")
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
     (X_train, y_train) = getPartition(partitionNumber, totalNumberPartitions, X_train_real[:totalTrainingSize],
@@ -25,7 +25,7 @@ def _train(model: MnistBase, partitionNumber, totalNumberPartitions, totalTraini
 
     logging.info("Shape of training Data " + str(X_train.shape))
 
-    model.train(X_train, y_train, X_train.shape[0])
+    model.train(X_train, y_train, X_train.shape[0], batchSize, epochs)
     logging.info("Finished Training")
 
 
@@ -34,7 +34,9 @@ def train(taskConfig: TaskConfig):
     _train(model,
            partitionNumber=taskConfig['partitionNumber'],
            totalNumberPartitions=taskConfig['totalNumberPartitions'],
-           totalTrainingSize=taskConfig['totalTrainingSize'])
+           totalTrainingSize=taskConfig['totalTrainingSize'],
+           batchSize= taskConfig["batchSize"],
+           epochs=taskConfig["epoch"])
     path = os.path.join(taskConfig['outputDir'], modelSaveLocation)
     model.save(path)
     logging.info("Saved model to " + path)
@@ -62,17 +64,11 @@ def test(config: TaskConfig):
     logging.info("End test")
 
 
-def getConfigObject(outputDir, pathToModuleCode, partitionNumber, totalNumberPartitions, modelType, repeatNumber,
-                    totalTrainingSize):
-    return {
+def getConfigObject(outputDir, repeatNumber, config:TaskConfig):
+    copyValues=["pathToModuleCode","partitionNumber","totalNumberPartitions","githubRepository","modelType","batchSize","epoch","totalTrainingSize"]
+    retVal = {
         "outputDir": outputDir,
-        "githubRepository": "https://github.com/jamesHargreaves12/SimpleML.git",
-        "pathToModuleCode": pathToModuleCode,
-        "partitionNumber": partitionNumber,
-        "totalNumberPartitions": totalNumberPartitions,
         'repeatNumber': repeatNumber,
-        "modelType": modelType,
-        "totalTrainingSize": totalTrainingSize,
         "tasks": [
             {
                 "id": "Train",
@@ -84,6 +80,9 @@ def getConfigObject(outputDir, pathToModuleCode, partitionNumber, totalNumberPar
             }
         ]
     }
+    for k in copyValues:
+        retVal[k]=config[k]
+    return retVal
 
 
 def createConfigs(config: TaskConfig):
@@ -94,12 +93,8 @@ def createConfigs(config: TaskConfig):
         configFileName = 'config_{}.yaml'.format(id)
         configs[configFileName] = getConfigObject(
             outputDir=os.path.join(config['baseOutputDir'], id),
-            partitionNumber=i,
-            pathToModuleCode=config['pathToModuleCode'],
-            totalNumberPartitions=config['totalNumberPartitions'],
-            modelType=config['modelType'],
             repeatNumber=config['repeatNumber'],
-            totalTrainingSize=config['totalTrainingSize']
+            config=config
         )
     return configs
 
