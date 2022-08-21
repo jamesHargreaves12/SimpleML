@@ -15,7 +15,6 @@ from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D, GlobalAveragePooli
 from tensorflow.keras.layers import BatchNormalization
 
 
-
 class MnistBase(metaclass=ABCMeta):
     @abstractmethod
     def summary(self):
@@ -163,6 +162,7 @@ class ConvModel(MnistBase):
 
     def load(self, filepath):
         self.model.load_weights(filepath)
+
 
 def get_accuracy(preds, real):
     return np.count_nonzero(preds == real) / real.shape[0]
