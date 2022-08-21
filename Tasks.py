@@ -68,7 +68,7 @@ def getConfigObject(outputDir, partitionNumber, config:TaskConfig):
     copyValues=["pathToModuleCode","repeatNumber","totalNumberPartitions","githubRepository","modelType","batchSize","epochs","totalTrainingSize"]
     retVal = {
         "outputDir": outputDir,
-        "PartitionNumber": partitionNumber,
+        "partitionNumber": partitionNumber,
         "tasks": [
             {
                 "id": "Train",
