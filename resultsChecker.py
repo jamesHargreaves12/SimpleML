@@ -1,6 +1,7 @@
 import json
 import random
 import statistics
+import sys
 from collections import defaultdict
 from datetime import datetime, timedelta
 from itertools import product
@@ -16,15 +17,19 @@ from tqdm import tqdm
 
 
 def StatusFilter(status: StatusTracker):
-    return status.start_time > datetime.now() - timedelta(days=5)
+    return status.start_time > datetime.now() - timedelta(days=1)
 
 
 def ConfigFilter(config: Config):
-    return 'totalNumberPartitions' in config.raw_config \
-           and config.raw_config['totalNumberPartitions'] == 10 \
-           and config.raw_config['totalTrainingSize'] == 1000 \
-           and config.raw_config['modelType'] == 'Simple'
+    # return 'totalNumberPartitions' in config.raw_config \
+           # and config.raw_config['totalNumberPartitions'] == 10 \
+           # and config.raw_config['totalTrainingSize'] == 1000 \
+           return config.raw_config['modelType'] == 'Conv'
 
+results = getResults(configFilter=ConfigFilter, statusFilter=StatusFilter)
+for r in (results):
+    print(r)
+sys.exit()
 
 def statisticalSignificance(l: list, r: list, N: int):
     assert (len(l) == len(r))

@@ -37,7 +37,7 @@ def main():
                                          i, repeatNumber)
             configFileName = 'config_{}.yaml'.format(id)
             configs[configFileName] = getConfigObject(
-                outputDir=id,
+                outputDir= "{date}/"+id,
                 partitionNumber=i,
                 config=base_config,
                 repeatNumber=repeatNumber,
@@ -55,10 +55,10 @@ def main2():
                                      base_config['totalTrainingSize'])
         configFileName = 'config_{}.yaml'.format(id)
         configs[configFileName] = getConfigObject(
-            outputDir=id,
+            outputDir="{date}/" + id,
             partitionNumber=0,
             config=base_config,
-            repeatNumber=-1,
+            repeatNumber=epochs,
             totalNumberPartitions=totalNumberPartitions
         )
     saveConfigs(configs)
