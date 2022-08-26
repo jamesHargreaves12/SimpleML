@@ -45,24 +45,26 @@ def main():
             )
     saveConfigs(configs)
 
-def main2():
+def main2():# used for budget hyperparameter optimisation stuff
     base_config = yaml.safe_load(open("./baseConfig.yaml"))
     configs = {}
     totalNumberPartitions = 10
-    for epochs in tqdm(range(1,6)):
-        base_config["epochs"] = epochs
-        id = "hyp_{}_{}_{}".format(epochs, base_config['modelType'],
-                                     base_config['totalTrainingSize'])
-        configFileName = 'config_{}.yaml'.format(id)
-        configs[configFileName] = getConfigObject(
-            outputDir="{date}/" + id,
-            partitionNumber=0,
-            config=base_config,
-            repeatNumber=epochs,
-            totalNumberPartitions=totalNumberPartitions
+    for batchSize in [1,4,16,64,128]:
+        base_config["batchSize"] = batchSize
+        for epochs in tqdm(range(1,6)):
+            base_config["epochs"] = epochs
+            id = "hyp_{}_{}_{}_{}".format(batchSize, epochs, base_config['modelType'],
+                                         base_config['totalTrainingSize'])
+            configFileName = 'config_{}.yaml'.format(id)
+            configs[configFileName] = getConfigObject(
+                outputDir="{date}/" + id,
+                partitionNumber=0,
+                config=base_config,
+                repeatNumber="{}_{}".format(batchSize,epochs),
+                totalNumberPartitions=totalNumberPartitions
         )
     saveConfigs(configs)
 
 
 if __name__ == "__main__":
-    main2()
+    main()
