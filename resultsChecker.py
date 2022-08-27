@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 import numpy as np
-
+import seaborn as sns
 from job_orchestration.Config import Config
 from job_orchestration.clientUtils import getResults
 from job_orchestration.StatusTracker import StatusTracker
@@ -26,10 +26,6 @@ def ConfigFilter(config: Config):
            # and config.raw_config['totalTrainingSize'] == 1000 \
            return config.raw_config['modelType'] == 'Conv'
 
-results = getResults(configFilter=ConfigFilter, statusFilter=StatusFilter)
-for r in (results):
-    print(r)
-sys.exit()
 
 def statisticalSignificance(l: list, r: list, N: int):
     assert (len(l) == len(r))
@@ -37,7 +33,7 @@ def statisticalSignificance(l: list, r: list, N: int):
     realMedDiff = abs(statistics.median(l) - statistics.median(r))
     biggerCount = 0
     for _ in range(N):
-        idx_chosen = set(random.sample(range(2000), k=len(l)))
+        idx_chosen = set(random.sample(range(len(l)+len(r)), k=len(l)))
         l1 = [x for i, x in enumerate(total) if i in idx_chosen]
         r1 = [x for i, x in enumerate(total) if i not in idx_chosen]
         medDiff = abs(statistics.median(l1) - statistics.median(r1))
@@ -48,7 +44,8 @@ def statisticalSignificance(l: list, r: list, N: int):
 
 
 # results = getResults(configFilter=ConfigFilter, statusFilter=StatusFilter)
-results = json.load(open("results_simple_N=1000_C=10.json"))  # cached
+# json.dump(results, open("results_conv_N=1000_C=10.json", "w"))
+results = json.load(open("results_conv_N=1000_C=10.json"))  # cached
 # print(results)
 print("loaded and filtered results")
 print(results[0])
@@ -66,7 +63,7 @@ accs = {}
 for i in range(10):
     accs[i] = df[df['partitionNumber'] == i]['accuracy']
 
-if False:  # box plot
+if True:  # box plot
     df2 = pd.DataFrame.from_dict(accs)
 
     order = sorted([(i, x.median()) for i, x in accs.items()], key=lambda x: x[1])
@@ -74,8 +71,8 @@ if False:  # box plot
     plt.rcParams["figure.figsize"] = [7.50, 3.50]
     plt.rcParams["figure.autolayout"] = True
     ax = df2[[x for x, _ in order]].plot(kind='box', title='boxplot')
-
     plt.show()
+    plt.figure()
 
 # Cumulatives
 start = min([accs[i].min() for i in range(10)])
@@ -83,7 +80,7 @@ end = max([accs[i].max() for i in range(10)])
 
 xs = list(np.arange(start, end, (end - start) / 1000))
 
-for i in [4, 8]:
+for i in range(10):
     ys = [accs[i][accs[i] < x].count() for x in xs]
     plt.plot(xs, ys)
 plt.show()
@@ -107,4 +104,7 @@ for top in order:
         topVals.append(crossCompare[top][bottom])
     vals.append(topVals)
 
-# 4 worst and 8 best
+plt.figure()
+
+# sns.heatmap
+sns.heatmap(vals)
