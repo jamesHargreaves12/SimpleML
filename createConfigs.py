@@ -12,11 +12,11 @@ def getConfigObject(outputDir, partitionNumber, config: dict, totalNumberPartiti
         "tasks": [
             {
                 "id": "Train",
-                "method": "train"
+                "method": "Train"
             },
             {
                 "id": "Test",
-                "method": "test"
+                "method": "Test"
             },
             {
                 "id": "compress",
