@@ -45,7 +45,7 @@ def statisticalSignificance(l: list, r: list, N: int):
 
 # results = getResults(configFilter=ConfigFilter)
 # json.dump(results, open("results_conv_N=1000_C=10.json", "w"))
-results = json.load(open("results_simple_N=1000_C=10.json"))  # cached
+results = json.load(open("results_conv_N=1000_C=10.json"))  # cached
 # print(results)
 print("loaded and filtered results")
 print(results[0])
