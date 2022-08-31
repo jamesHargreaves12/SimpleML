@@ -52,7 +52,7 @@ def test(config: TaskConfig):
     path = os.path.join(config['outputDir'], modelSaveLocation)
     logging.info("Loading model from " + path)
     model.load(path)
-    logging.info("Fished loading model")
+    logging.info("Finished loading model")
     acc = get_accuracy(model.getTestOutput(X_test_real), y_test_real)
     logging.info("Resulting accuracy = " + str(acc))
     with open(os.path.join(config['outputDir'], 'results.yaml'), 'w+') as fp:
@@ -67,8 +67,8 @@ def test(config: TaskConfig):
     return acc  # for hyperparam optimisation we need to return to the lib the value
 
 
-def compressModel(confg: TaskConfig):
-    modelFolder = modelSaveLocation.parent
+def compressModel(config: TaskConfig):
+    modelFolder = os.path.join(config['outputDir'], modelSaveLocation.parent)
     logging.info("Compressing " + str(modelFolder))
     z7_compress(modelFolder)
     logging.info("Finished")

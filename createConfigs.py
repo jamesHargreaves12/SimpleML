@@ -34,7 +34,7 @@ def main():
     base_config = yaml.safe_load(open("./baseConfig.yaml"))
     configs = {}
     totalNumberPartitions = 10
-    for repeatNumber in tqdm(range(200,210)):
+    for repeatNumber in tqdm(range(210,230)):
         for i in range(totalNumberPartitions):
             id = "{}_{}_{}_{}_{}".format(base_config['modelType'], totalNumberPartitions,
                                          base_config['totalTrainingSize'],
