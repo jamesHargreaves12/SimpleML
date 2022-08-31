@@ -20,7 +20,7 @@ def getConfigObject(outputDir, partitionNumber, config: dict, totalNumberPartiti
             },
             {
                 "id": "compress",
-                "method": "compressModel"
+                "method": "CompressModel"
             }
         ]
     }
