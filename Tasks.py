@@ -75,11 +75,15 @@ class Test(TaskBase):
         return acc  # for hyperparam optimisation we need to return to the lib the value
 
 
-def compressModel(config: dict):
-    modelFolder = os.path.join(config['outputDir'], modelSaveLocation.parent)
-    logging.info("Compressing " + str(modelFolder))
-    z7_compress(modelFolder)
-    logging.info("Finished")
+class CompressModel(TaskBase):
+    def __init__(self, config: dict):
+        self.config = config
+
+    def run(self):
+        modelFolder = os.path.join(self.config['outputDir'], modelSaveLocation.parent)
+        logging.info("Compressing " + str(modelFolder))
+        z7_compress(modelFolder)
+        logging.info("Finished")
 
 
 if __name__ == "__main__":
