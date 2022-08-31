@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 
 import numpy as np
 import yaml
@@ -9,15 +10,16 @@ from types import SimpleNamespace
 
 from Models import SimpleModel, MnistBase, ConvModel
 from helpers import getPartition
+from zipModelFile import z7_compress
 
-modelSaveLocation = 'model/postTrain.ckpt'
+modelSaveLocation = Path('model/postTrain.ckpt')
 
 
 def get_accuracy(preds, real):
     return np.count_nonzero(preds == real) / real.shape[0]
 
 
-def _train(model: MnistBase, partitionNumber, totalNumberPartitions, totalTrainingSize,batchSize, epochs):
+def _train(model: MnistBase, partitionNumber, totalNumberPartitions, totalTrainingSize, batchSize, epochs):
     logging.info("Start Training")
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
     (X_train, y_train) = getPartition(partitionNumber, totalNumberPartitions, X_train_real[:totalTrainingSize],
@@ -35,7 +37,7 @@ def train(taskConfig: TaskConfig):
            partitionNumber=taskConfig['partitionNumber'],
            totalNumberPartitions=taskConfig['totalNumberPartitions'],
            totalTrainingSize=taskConfig['totalTrainingSize'],
-           batchSize= taskConfig["batchSize"],
+           batchSize=taskConfig["batchSize"],
            epochs=taskConfig["epochs"])
     path = os.path.join(taskConfig['outputDir'], modelSaveLocation)
     model.save(path)
@@ -62,6 +64,14 @@ def test(config: TaskConfig):
                 'repeatNumber': config['repeatNumber']
             }, fp)
     logging.info("End test")
+    return acc  # for hyperparam optimisation we need to return to the lib the value
+
+
+def compressModel(confg: TaskConfig):
+    modelFolder = modelSaveLocation.parent
+    logging.info("Compressing " + str(modelFolder))
+    z7_compress(modelFolder)
+    logging.info("Finished")
 
 
 if __name__ == "__main__":
