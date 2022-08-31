@@ -77,7 +77,8 @@ class SimpleModel(MnistBase):
         self.model.save_weights(filepath)
 
     def load(self, filepath):
-        self.model.load_weights(filepath)
+        # expect partial as we will only be using it for inference and not training
+        self.model.load_weights(filepath).expect_partial()
 
     def getTestOutput(self, xs):
         X_test = xs.reshape(10000, 784)
@@ -161,7 +162,8 @@ class ConvModel(MnistBase):
         self.model.save_weights(filepath)
 
     def load(self, filepath):
-        self.model.load_weights(filepath)
+        # expect partial as we will only be using it for inference and not training
+        self.model.load_weights(filepath).expect_partial()
 
 
 def get_accuracy(preds, real):
