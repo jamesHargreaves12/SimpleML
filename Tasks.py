@@ -80,7 +80,7 @@ def get_accuracy(preds, real):
 
 
 class CompressModel(TaskWithInitAndValidate):
-    outputDir: str
+    outputDir: Path
 
     def run(self):
         modelFolder = os.path.join(self.outputDir, modelSaveLocation.parent)
@@ -102,14 +102,20 @@ def getBucket():
     return s3.Bucket('simple-ml-output')
 
 
+def getS3Path(filepath:Path):
+    # TODO this is crap as it hides a dependency but I think it requires a change to JobOrchestration to get it to work properly so will leave it for now
+    BASE_FOLDER = os.environ.get('JOB_ORCHESTRATION_WORKSPACE')
+    outputLocation = os.path.join(BASE_FOLDER, 'Output')
+    return "results/"+str(filepath).replace(outputLocation,"")
+
 class WriteToS3(TaskWithInitAndValidate):
-    outputDir: str
+    outputDir: Path
     hasValidated = False
 
     def run(self):
         bucket = getBucket()
-        for filename in os.path.listdir(self.outputDir):
-            bucket.upload_file(os.path.join(self.outputDir, filename), "results/" + filename)
+        for filename in self.outputDir.iterdir():
+            bucket.upload_file(filename, getS3Path(filename))
 
     def validate(self):
         if WriteToS3.hasValidated:
