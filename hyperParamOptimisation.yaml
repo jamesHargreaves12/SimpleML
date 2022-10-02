@@ -2,7 +2,7 @@ githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
 baseOutputDir: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo\JobOrchestrationWorkspace\Output\Hyperparms
 outputDir: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo\JobOrchestrationWorkspace\Output\Hyperparms
 partitionNumber: 0
-numberTrials: 10
+numberTrials: 420
 pathToTasks: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo
 tasks:
 - id: StartHyperparameterOptimization
@@ -22,7 +22,7 @@ params:
       - 5
       - 10
       - 20
-  - name: epoch
+  - name: epochs
     type: list
     vals:
       - 1
