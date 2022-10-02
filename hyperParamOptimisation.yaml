@@ -1,11 +1,14 @@
 githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
 baseOutputDir: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo\JobOrchestrationWorkspace\Output\Hyperparms
 partitionNumber: 0
-pathToModuleCode: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo
+numberTrials: 10
+pathToTasks: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo
 tasks:
 - id: StartHyperparameterOptimization
   method: StartHyperparameterOptimization
-optimisationMethod: train_and_test_no_save
+optimisationMethod: grid
+testMethod: Train_and_test_no_save
+resultsFilepath: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo\JobOrchestrationWorkspace\Output\Hyperparms\results.yaml
 gridLineCount: 3
 params:
   - name: batchSize

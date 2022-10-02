@@ -75,7 +75,7 @@ class Test(TaskWithInitAndValidate):
 
 
 # Should only be used on Hyperparamater Optimisation where repeatability is not important
-def train_and_test_no_save(TaskWithInitAndValidate):
+class Train_and_test_no_save(TaskWithInitAndValidate):
     totalTrainingSize: int
     batchSize: int
     epochs: int
