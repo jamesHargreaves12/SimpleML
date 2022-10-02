@@ -104,6 +104,7 @@ def getBucket():
 
 class WriteToS3(TaskWithInitAndValidate):
     outputDir: str
+    hasValidated = False
 
     def run(self):
         bucket = getBucket()
@@ -111,10 +112,15 @@ class WriteToS3(TaskWithInitAndValidate):
             bucket.upload_file(os.path.join(self.outputDir, filename), "results/" + filename)
 
     def validate(self):
-        # Just do a read to ensure that the creds are real
+        if hasValidated:
+            return []
+            
         bucket = getBucket()
+        # Just do a read to ensure that the creds are real
         with open('validation_test_file.txt', 'wb') as f:
             bucket.download_fileobj("test/hello.txt", f)
+        hasValidated = True
+        return []
 
 
 if __name__ == "__main__":
