@@ -112,14 +112,14 @@ class WriteToS3(TaskWithInitAndValidate):
             bucket.upload_file(os.path.join(self.outputDir, filename), "results/" + filename)
 
     def validate(self):
-        if hasValidated:
+        if WriteToS3.hasValidated:
             return []
             
         bucket = getBucket()
         # Just do a read to ensure that the creds are real
         with open('validation_test_file.txt', 'wb') as f:
             bucket.download_fileobj("test/hello.txt", f)
-        hasValidated = True
+        WriteToS3.hasValidated = True
         return []
 
 
