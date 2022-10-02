@@ -2,5 +2,5 @@ batchSize: 4
 epochs: 3
 githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
 modelType: Conv
-pathToModuleCode: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo
+pathToTasks: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo
 totalTrainingSize: 1000

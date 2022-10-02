@@ -1,12 +1,10 @@
-import numpy as np  # advanced math library
-import matplotlib.pyplot as plt  # MATLAB like plotting routines
-import random  # for generating random numbers
+import numpy as np
 
-from keras.datasets import mnist  # MNIST dataset is included in Keras
-from keras.models import Sequential  # Model type to be used
+from keras.datasets import mnist
+from keras.models import Sequential
 
-from keras.layers.core import Dense, Dropout, Activation  # Types of layers to be used in our model
-from keras.utils import np_utils  # NumPy related tools
+from keras.layers.core import Dense, Dropout, Activation
+from keras.utils import np_utils
 
 from abc import ABCMeta, abstractmethod
 

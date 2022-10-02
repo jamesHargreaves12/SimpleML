@@ -2,6 +2,7 @@ import logging
 import os
 from pathlib import Path
 
+import boto3
 import numpy as np
 import yaml
 from job_orchestration.TaskBase import TaskBase
@@ -19,7 +20,7 @@ modelSaveLocation = Path('model/postTrain.ckpt')
 class Train(TaskWithInitAndValidate):
     partitionNumber: int
     totalNumberPartitions: int
-    modelType: str # nullable
+    modelType: str  # nullable
     repeatNumber: int
     outputDir: str
     totalTrainingSize: int
@@ -31,7 +32,8 @@ class Train(TaskWithInitAndValidate):
 
         logging.info("Start Training")
         (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
-        (X_train, y_train) = getPartition(self.partitionNumber, self.totalNumberPartitions, X_train_real[:self.totalTrainingSize],
+        (X_train, y_train) = getPartition(self.partitionNumber, self.totalNumberPartitions,
+                                          X_train_real[:self.totalTrainingSize],
                                           y_train_real[:self.totalTrainingSize])
 
         logging.info("Shape of training Data " + str(X_train.shape))
@@ -85,6 +87,34 @@ class CompressModel(TaskWithInitAndValidate):
         logging.info("Compressing " + str(modelFolder))
         z7_compress(modelFolder)
         logging.info("Finished")
+
+
+aws_access_key_id = os.environ['AWS_ACCESS_KEY_ID_SIMPLE_ML']
+aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY_SIMPLE_ML'] 
+
+def getBucket():
+    s3 = boto3.resource(
+        's3',
+        region_name='eu-west-2',
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key
+    )
+    return s3.Bucket('simple-ml-output')
+
+
+class WriteToS3(TaskWithInitAndValidate):
+    outputDir: str
+
+    def run(self):
+        bucket = getBucket()
+        for filename in os.path.listdir(self.outputDir):
+            bucket.upload_file(os.path.join(self.outputDir, filename), "results/" + filename)
+
+    def validate(self):
+        # Just do a read to ensure that the creds are real
+        bucket = getBucket()
+        with open('validation_test_file.txt', 'wb') as f:
+            bucket.download_fileobj("test/hello.txt", f)
 
 
 if __name__ == "__main__":
