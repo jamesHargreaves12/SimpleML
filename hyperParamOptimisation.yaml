@@ -1,0 +1,43 @@
+githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
+baseOutputDir: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo\JobOrchestrationWorkspace\Output\Hyperparms
+partitionNumber: 0
+pathToModuleCode: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo
+tasks:
+- id: StartHyperparameterOptimization
+  method: StartHyperparameterOptimization
+optimisationMethod: train_and_test_no_save
+gridLineCount: 3
+params:
+  - name: batchSize
+    type: list
+    vals:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 10
+      - 20
+  - name: epoch
+    type: list
+    vals:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+  - name: totalTrainingSize
+    type: list
+    vals:
+      - 100
+      - 200
+      - 300
+      - 500
+      - 1000
+      - 2000
+  - name: modelType
+    type: list
+    vals:
+      - Simple
+      - Conv
+

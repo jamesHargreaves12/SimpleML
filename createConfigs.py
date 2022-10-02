@@ -3,7 +3,7 @@ import yaml
 from job_orchestration.clientUtils import saveConfigs
 
 
-def getConfigObject(outputDir, partitionNumber, config: dict, totalNumberPartitions, repeatNumber):
+def getConfigObject(outputDir, partitionNumber, config: dict, totalNumberPartitions, repeatNumber,tags: list):
     retVal = {
         "outputDir": outputDir,
         "totalNumberPartitions": totalNumberPartitions,
@@ -21,7 +21,7 @@ def getConfigObject(outputDir, partitionNumber, config: dict, totalNumberPartiti
             {
                 "id": "compress",
                 "method": "CompressModel"
-            }
+            },
             {
                 "id": "writeToS3",
                 "method": "WriteToS3"

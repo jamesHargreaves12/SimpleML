@@ -5,7 +5,6 @@ from pathlib import Path
 import boto3
 import numpy as np
 import yaml
-from job_orchestration.TaskBase import TaskBase
 from job_orchestration.configBase import TaskWithInitAndValidate
 from keras.datasets import mnist
 from types import SimpleNamespace
@@ -75,6 +74,26 @@ class Test(TaskWithInitAndValidate):
         return acc  # for hyperparam optimisation we need to return to the lib the value
 
 
+# Should only be used on Hyperparamater Optimisation where repeatability is not important
+def train_and_test_no_save(TaskWithInitAndValidate):
+    totalTrainingSize: int
+    batchSize: int
+    epochs: int
+    modelType: str
+
+    def run(self):
+        model = SimpleModel() if self.modelType != "Conv" else ConvModel()
+        logging.info("Start Training")
+        (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
+        (X_train, y_train) = X_train_real[:self.totalTrainingSize], y_train_real[:self.totalTrainingSize]
+        logging.info("Shape of training Data " + str(X_train.shape))
+        model.train(X_train, y_train, X_train.shape[0], self.batchSize, self.epochs)
+        logging.info("Finished Training")
+        acc = get_accuracy(model.getTestOutput(X_test_real), y_test_real)
+        logging.info("Resulting accuracy = " + str(acc))
+        return acc
+
+
 def get_accuracy(preds, real):
     return np.count_nonzero(preds == real) / real.shape[0]
 
@@ -90,7 +109,8 @@ class CompressModel(TaskWithInitAndValidate):
 
 
 aws_access_key_id = os.environ['AWS_ACCESS_KEY_ID_SIMPLE_ML']
-aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY_SIMPLE_ML'] 
+aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY_SIMPLE_ML']
+
 
 def getBucket():
     s3 = boto3.resource(
@@ -102,25 +122,29 @@ def getBucket():
     return s3.Bucket('simple-ml-output')
 
 
-def getS3Path(filepath:Path):
+def getS3Path(filepath: str):
     # TODO this is crap as it hides a dependency but I think it requires a change to JobOrchestration to get it to work properly so will leave it for now
     BASE_FOLDER = os.environ.get('JOB_ORCHESTRATION_WORKSPACE')
     outputLocation = os.path.join(BASE_FOLDER, 'Output')
-    return "results/"+str(filepath).replace(outputLocation,"")
+    return os.path.join("results/" + filepath.replace(outputLocation, "")).replace('\\', '/')
+
 
 class WriteToS3(TaskWithInitAndValidate):
-    outputDir: Path
+    outputDir: str
     hasValidated = False
 
     def run(self):
         bucket = getBucket()
-        for filename in self.outputDir.iterdir():
-            bucket.upload_file(filename, getS3Path(filename))
+        for filename in os.listdir(self.outputDir):
+            filepath = os.path.join(self.outputDir, filename)
+            s3FilePath = getS3Path(filepath)
+            logging.info("Uploading " + filepath + " to S3 location " + s3FilePath)
+            bucket.upload_file(filepath, s3FilePath)
 
     def validate(self):
         if WriteToS3.hasValidated:
             return []
-            
+
         bucket = getBucket()
         # Just do a read to ensure that the creds are real
         with open('validation_test_file.txt', 'wb') as f:
