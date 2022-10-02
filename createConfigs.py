@@ -22,6 +22,10 @@ def getConfigObject(outputDir, partitionNumber, config: dict, totalNumberPartiti
                 "id": "compress",
                 "method": "CompressModel"
             }
+            {
+                "id": "writeToS3",
+                "method": "WriteToS3"
+            }
         ]
     }
     for k in config.keys():
