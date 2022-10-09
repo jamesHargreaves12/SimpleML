@@ -2,6 +2,6 @@ batchSize: 4
 epochs: 3
 githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
 modelType: Conv
-pathToTasks: C:\Users\james.hargreaves\PycharmProjects\SimpleMLRepo
+pathToTasks: /home/ec2-user/SimpleML/
 tags:
   - trainSizeVsPerf

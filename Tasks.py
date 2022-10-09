@@ -82,6 +82,9 @@ class Train_and_test_no_save(TaskWithInitAndValidate):
     batchSize: int
     epochs: int
     modelType: str
+    saveResult: bool
+    outputDir: str
+    repeatNumber: int
 
     def run(self):
         model = SimpleModel() if self.modelType != "Conv" else ConvModel()
@@ -93,6 +96,13 @@ class Train_and_test_no_save(TaskWithInitAndValidate):
         logging.info("Finished Training")
         acc = get_accuracy(model.getTestOutput(X_test_real), y_test_real)
         logging.info("Resulting accuracy = " + str(acc))
+        with open(os.path.join(self.outputDir, 'results.yaml'), 'w+') as fp:
+            yaml.dump(
+                {
+                    'accuracy': acc,
+                    'modelType': self.modelType,
+                    'repeatNumber': self.repeatNumber
+                }, fp)
         return acc
 
 
@@ -125,7 +135,7 @@ def getBucket():
 
 
 def getS3Path(filepath: str):
-    return os.path.join("results/" + filepath.replace(Constants.output_location, "")).replace('\\', '/')
+    return os.path.join("results" + filepath.replace(Constants.output_location, "")).replace('\\', '/')
 
 
 class WriteToS3(TaskWithInitAndValidate):
