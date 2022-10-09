@@ -9,6 +9,7 @@ from job_orchestration import Constants
 from job_orchestration.configBase import TaskWithInitAndValidate
 from keras.datasets import mnist
 from types import SimpleNamespace
+import tempfile
 
 from Models import SimpleModel, ConvModel
 from helpers import getPartition
@@ -145,7 +146,7 @@ class WriteToS3(TaskWithInitAndValidate):
 
         bucket = getBucket()
         # Just do a read to ensure that the creds are real
-        with open('C:/tmp/validation_test_file.txt', 'wb') as f:
+        with open(os.path.join(tempfile.gettempdir(),'validation_test_file.txt'), 'wb') as f:
             bucket.download_fileobj("test/hello.txt", f)
         WriteToS3.hasValidated = True
         return []
