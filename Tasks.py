@@ -5,6 +5,7 @@ from pathlib import Path
 import boto3
 import numpy as np
 import yaml
+from job_orchestration import Constants
 from job_orchestration.configBase import TaskWithInitAndValidate
 from keras.datasets import mnist
 from types import SimpleNamespace
@@ -123,10 +124,7 @@ def getBucket():
 
 
 def getS3Path(filepath: str):
-    # TODO this is crap as it hides a dependency but I think it requires a change to JobOrchestration to get it to work properly so will leave it for now
-    BASE_FOLDER = os.environ.get('JOB_ORCHESTRATION_WORKSPACE')
-    outputLocation = os.path.join(BASE_FOLDER, 'Output')
-    return os.path.join("results/" + filepath.replace(outputLocation, "")).replace('\\', '/')
+    return os.path.join("results/" + filepath.replace(Constants.output_location, "")).replace('\\', '/')
 
 
 class WriteToS3(TaskWithInitAndValidate):
@@ -147,7 +145,7 @@ class WriteToS3(TaskWithInitAndValidate):
 
         bucket = getBucket()
         # Just do a read to ensure that the creds are real
-        with open('validation_test_file.txt', 'wb') as f:
+        with open('C:/tmp/validation_test_file.txt', 'wb') as f:
             bucket.download_fileobj("test/hello.txt", f)
         WriteToS3.hasValidated = True
         return []

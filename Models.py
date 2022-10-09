@@ -169,6 +169,9 @@ def get_accuracy(preds, real):
 
 
 if __name__ == "__main__":
+    model = ConvModel()
+    model.summary()
+
     # The MNIST data is split between 60,000 28 x 28 pixel training images and 10,000 28 x 28 pixel images
     (X_train_real, y_train_real), (X_test_real, y_test_real) = mnist.load_data()
 
