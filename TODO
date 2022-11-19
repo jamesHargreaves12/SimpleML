@@ -1,0 +1,4 @@
+
+Reduce Friction of running:
+ - Write a script to send config files to S3 and then start the work
+ - notify once it is finished

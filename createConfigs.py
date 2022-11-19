@@ -14,6 +14,7 @@ def getConfigObject(outputDir:str, partitionNumber:int, config: dict, repeatNumb
         "totalTrainingSize": totalTrainingSize,
         "batchSize": batchSize,
         "epochs": epochs,
+        "saveResult": True,
         "tasks": [
             {
                 "id": "Train_and_test_no_save",
@@ -35,19 +36,21 @@ def main():
     hyperParamConfig = {('Simple', 100): {'batchSize': 1, 'epochs': 4},
                         ('Simple', 200): {'batchSize': 5, 'epochs': 5},
                         ('Simple', 300): {'batchSize': 10, 'epochs': 5},
+                        ('Simple', 400): {'batchSize': 10, 'epochs': 5},
                         ('Simple', 500): {'batchSize': 10, 'epochs': 4},
                         ('Simple', 1000): {'batchSize': 20, 'epochs': 4},
                         ('Simple', 2000): {'batchSize': 5, 'epochs': 4},
                         ('Conv', 100): {'batchSize': 20, 'epochs': 1},
                         ('Conv', 200): {'batchSize': 2, 'epochs': 5},
                         ('Conv', 300): {'batchSize': 3, 'epochs': 5},
+                        ('Conv', 400): {'batchSize': 4, 'epochs': 5},
                         ('Conv', 500): {'batchSize': 5, 'epochs': 5},
                         ('Conv', 1000): {'batchSize': 5, 'epochs': 5},
                         ('Conv', 2000): {'batchSize': 5, 'epochs': 5}
                     }
     base_config = yaml.safe_load(open("./baseConfig.yaml"))
     configs = {}
-    for repeatNumber in tqdm(range(0,1000)):
+    for repeatNumber in tqdm(range(0,300)):
         for trainSize in (200,300,400,500,2000):
             for modelType in ['Simple','Conv']:
                 file_id: str = f"{modelType}_{trainSize}_{repeatNumber}"
@@ -61,9 +64,6 @@ def main():
                     batchSize=hyperParamConfig[(modelType, trainSize)]['batchSize'],
                     epochs = hyperParamConfig[(modelType, trainSize)]['epochs']
                 )
-                break
-            break
-        break
     saveConfigs(configs)
 
 

@@ -1,0 +1,17 @@
+# ssh onto server
+ssh -i "C:/Users/james.hargreaves/AwsStuff/WorkerNodeKeyPair.pem" ec2-user@ec2-18-132-201-119.eu-west-2.compute.amazonaws.com
+
+# start new worker on the server in background thread
+sudo su
+cd SimpleML/
+source venv/bin/activate
+export AWS_SECRET_ACCESS_KEY_SIMPLE_ML='4VHhJOFLLeFPyYpHSG0xL9ZXE7doP0+OdSeMPnex'
+export JOB_ORCHESTRATION_WORKSPACE='/home/ec2-user/SimpleML/output'
+export AWS_ACCESS_KEY_ID_SIMPLE_ML='AKIA57LVTL7FQSQV7HZB'
+python -m job_orchestration -action newWorker &>output.log &
+
+# tail the logs
+tail -F output.log
+
+# Copy a file from the server to local
+scp -i "C:/Users/james.hargreaves/AwsStuff/WorkerNodeKeyPair.pem" ec2-user@ec2-18-132-201-119.eu-west-2.compute.amazonaws.com:/home/ec2-user/SimpleML/Output/Hyperparms/results.yaml C:/tmp

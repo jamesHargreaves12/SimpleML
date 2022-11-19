@@ -1,5 +1,3 @@
-batchSize: 4
-epochs: 3
 githubRepository: https://github.com/jamesHargreaves12/SimpleML.git
 modelType: Conv
 pathToTasks: /home/ec2-user/SimpleML/

@@ -45,7 +45,7 @@ def statisticalSignificance(l: list, r: list, N: int):
 
 # results = getResults(configFilter=ConfigFilter)
 # json.dump(results, open("results_conv_N=1000_C=10.json", "w"))
-results = json.load(open("results_simple_N=1000_C=10.json"))  # cached
+results = json.load(open("results/results_conv_N=1000_C=10.json"))  # cached
 # print(results)
 print("loaded and filtered results")
 print(results[0])
@@ -74,7 +74,7 @@ if True:  # box plot
     plt.show()
     plt.figure()
 
-# Cumulatives
+# Cumulative
 start = min([accs[i].min() for i in range(10)])
 end = max([accs[i].max() for i in range(10)])
 
@@ -92,19 +92,19 @@ for i, j in tqdm(product(range(10), range(10))):
     else:
         val = statisticalSignificance(list(accs[i]), list(accs[j]), 1000)
     crossCompare[i][j] = val
-
+#
 print(crossCompare)
 order = [i for i, _ in sorted([(i, x.median()) for i, x in accs.items()], key=lambda x: x[1])]
 
 # head map of statistical significance.
-vals = []
-for top in order:
-    topVals = []
-    for bottom in order:
-        topVals.append(crossCompare[top][bottom])
-    vals.append(topVals)
+# vals = []
+# for top in order:
+#     topVals = []
+#     for bottom in order:
+#         topVals.append(crossCompare[top][bottom])
+#     vals.append(topVals)
 
-plt.figure()
+# plt.figure()
 
 # sns.heatmap
-sns.heatmap(vals)
+# sns.heatmap(vals)
